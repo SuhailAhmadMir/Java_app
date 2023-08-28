@@ -11,7 +11,7 @@ COPY src/StaticWebsiteServer.java /app/
 COPY resources /app/resources
 
 # Compile the Java source code
-RUN javac src/StaticWebsiteServer.java
+RUN javac StaticWebsiteServer.java
 
 # Expose port 8080 for the Java application
 EXPOSE 8080
