@@ -8,13 +8,13 @@ WORKDIR /app
 COPY resources /app/resources
 
 # Copy the Java source code to the container
-COPY src/StaticWebsiteServer.java /app/src/
+COPY src/StaticWebsiteServer.java /app/
 
 # Compile the Java source code
-RUN javac src/StaticWebsiteServer.java
+RUN javac StaticWebsiteServer.java
 
 # Expose port 8080 for the Java application
 EXPOSE 8080
 
 # Run the Java application when the container starts
-CMD ["java", "-cp", "src", "StaticWebsiteServer"]
+CMD ["java", "StaticWebsiteServer"]

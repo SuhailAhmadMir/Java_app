@@ -6,8 +6,8 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.net.InetSocketAddress;
 import java.nio.file.Files;
-import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Map;
 
 public class StaticWebsiteServer {
     public static void main(String[] args) throws IOException {
@@ -22,15 +22,23 @@ public class StaticWebsiteServer {
         @Override
         public void handle(HttpExchange exchange) throws IOException {
             String requestPath = exchange.getRequestURI().getPath();
-            Path filePath = Paths.get("resources").resolve(requestPath);
 
-            if (!Files.exists(filePath)) {
-                filePath = Paths.get("resources/404.html");
+            String filePath = "resources" + requestPath;
+            if (requestPath.equals("/")) {
+                filePath = "resources/index.html";
             }
 
             String contentType = getContentType(filePath);
 
-            byte[] responseBytes = Files.readAllBytes(filePath);
+            byte[] responseBytes;
+            try {
+                responseBytes = Files.readAllBytes(Paths.get(filePath));
+            } catch (IOException e) {
+                // If file not found, serve 404.html
+                filePath = "resources/404.html";
+                contentType = "text/html";
+                responseBytes = Files.readAllBytes(Paths.get(filePath));
+            }
 
             exchange.getResponseHeaders().set("Content-Type", contentType);
             exchange.sendResponseHeaders(200, responseBytes.length);
@@ -39,10 +47,10 @@ public class StaticWebsiteServer {
             os.close();
         }
 
-        private String getContentType(Path filePath) {
-            if (filePath.toString().endsWith(".html")) {
+        private String getContentType(String filePath) {
+            if (filePath.endsWith(".html")) {
                 return "text/html";
-            } else if (filePath.toString().endsWith(".css")) {
+            } else if (filePath.endsWith(".css")) {
                 return "text/css";
             }
             return "text/plain";
