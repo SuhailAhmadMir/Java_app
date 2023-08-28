@@ -4,8 +4,11 @@ FROM openjdk:8-jdk-alpine
 # Set the working directory inside the container
 WORKDIR /app
 
-# Copy the resources and source code to the container
-COPY . /app
+# Copy the resources directory containing your files
+COPY resources /app/resources
+
+# Copy the Java source code to the container
+COPY src/StaticWebsiteServer.java /app/src/
 
 # Compile the Java source code
 RUN javac src/StaticWebsiteServer.java
