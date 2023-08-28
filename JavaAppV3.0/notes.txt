@@ -1,0 +1,7 @@
+#Build the code
+javac src/StaticWebsiteServer.java
+# Run Application
+java StaticWebsiteServer
+
+docker build -t static-website-server-v3 .
+docker run -p 8080:8080 static-website-server-v3
